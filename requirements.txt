@@ -1,0 +1,7 @@
+streamlit>=1.45
+watchdog>=4.0.2
+pandas>=2.2.2
+python-calamine>=0.2.3
+pyam-iamc>=3.0.0
+iamcompact-vetting @ git+https://github.com/ciceroOslo/iamcompact-vetting.git
+iamcompact-nomenclature @ git+https://github.com/ciceroOslo/iamcompact-nomenclature.git

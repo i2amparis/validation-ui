@@ -259,14 +259,23 @@ def get_validation_dsd(
         loaded into session state or if `allow_load` is True. None if it has
         not been loaded and `allow_load` is False.
     """
+
+    # Get the selected profile from session state.
+    # Use 'iamcompact-default' if no profile has been set yet.
+    selected_profile = st.session_state.get(
+        SSKey.VALIDATION_PROFILE, 'iamcompact-default'
+    )
+
     dsd: DataStructureDefinition|None = st.session_state.get(
         SSKey.VALIDATION_DSD, None)
     if (dsd is None and allow_load) or force_load:
         if show_spinner:
             with st.spinner('Loading datastructure definition...'):
-                dsd = icnom.get_dsd(force_reload=force_load)
+                dsd = icnom.get_dsd(force_reload=force_load,
+                profile_name=selected_profile)
         else:
-            dsd = icnom.get_dsd(force_reload=force_load)
+            dsd = icnom.get_dsd(force_reload=force_load,
+            profile_name=selected_profile)
         st.session_state[SSKey.VALIDATION_DSD] = dsd
     return dsd
 ###END def get_validation_dsd

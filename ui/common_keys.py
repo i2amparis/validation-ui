@@ -49,6 +49,9 @@ class SSKey(StrEnum):
     None otherwise.
     """
 
+    VALIDATION_PROFILE = 'validation_profile'
+    """The name of the selected validation profile to use."""
+
     REGION_MAPPING_EXCLUDE_INVALID_REGIONS = 'region_mapping_exclude_invalid_regions'
     """Whether to exclude invalid regions from the region-mapping step, and thus
     avoid letting the processing crash. This is the last state of the checkbox
