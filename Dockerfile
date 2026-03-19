@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY . .
 
+ARG GITHUB_TOKEN
+RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+
 RUN uv sync
 
 EXPOSE 8501
