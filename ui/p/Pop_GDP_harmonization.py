@@ -196,7 +196,36 @@ def main():
 def compute_gdp_pop_harmonization_check(
     iamdf: pyam.IamDataFrame
 ) -> Mapping[str, PandasStyler]:
-    return gdp_pop_harmonization_output.prepare_styled_output(iamdf)
+    try:
+        return gdp_pop_harmonization_output.prepare_styled_output(iamdf)
+
+    except IndexError:
+        st.warning(
+            """
+            **GDP & population harmonization could not be performed**
+
+            The uploaded dataset does not contain the GDP and/or population
+            variables required for harmonization checks, or no matching
+            regions were found after region mapping.
+
+            This commonly happens when:
+            - GDP or population variables are missing
+            - The data only contains a subset of regions
+            - Region mapping has not been applied or does not match
+            """
+        )
+        st.stop()
+
+    except ValueError as err:
+        # Catch other expected vetting failures
+        st.warning(
+            f"""
+            **GDP & population harmonization could not be performed**
+
+            {err}
+            """
+        )
+        st.stop()
 ###END def compute_gdp_pop_harmonization_check
 
 def get_tolerance_range() -> tuple[float, float]:

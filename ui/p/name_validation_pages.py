@@ -128,15 +128,23 @@ def make_name_validation_dim_page(
     if extra_message is not None:
         st.write(extra_message)
 
-    invalid_names_obj: dict[str, str]|pd.DataFrame|None \
-        = st.session_state.get(invalid_names_dict_key)
-    invalid_names: list[str]|pd.DataFrame|None
-    if invalid_names_obj is None:
-        invalid_names = None
+    invalid_names_obj: dict[str, str] | pd.DataFrame | None = (
+        st.session_state.get(invalid_names_dict_key)
+    )
+
+    invalid_names: list[str] | pd.DataFrame | None
+
+    if dim_name == "variable/unit combination":
+      # For this page, None means "check ran and no invalid combos"
+      invalid_names = invalid_names_obj
+    elif invalid_names_obj is None:
+      invalid_names = None
     elif not isinstance(invalid_names_obj, pd.DataFrame):
-        invalid_names = st.session_state[invalid_names_dict_key][dim_name]
+      invalid_names = invalid_names_obj[dim_name]
     else:
-        invalid_names = invalid_names_obj
+      invalid_names = invalid_names_obj
+
+
 
     if display_all_valid_names_tab:
         invalid_names_tab, all_valid_names_tab = st.tabs(
@@ -150,11 +158,17 @@ def make_name_validation_dim_page(
 
     with invalid_names_tab:
         if invalid_names is None:
-            st.info(
-                'The name validation check has not been run yet, no results to '
-                'display.',
-                icon='⛔',
-            )
+           if dim_name == "variable/unit combination":
+               st.info(
+                   'No invalid variable/unit combinations found.',
+                   icon='✅',
+               )
+           else:
+               st.info(
+                   'The name validation check has not been run yet, no results to '
+                   'display.',
+                   icon='⛔',
+               )
         elif invalid_names_display_func is not None:
             invalid_names_display_func(
                 invalid_names,

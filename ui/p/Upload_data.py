@@ -38,6 +38,12 @@ def main():
 
     st.header("Upload modelling results for vetting")
 
+    validation_profiles = {
+    'IAM COMPACT Default': 'iamcompact-default',
+    'New Definitions': 'new-project-defs',
+    # Add more options here...
+    }
+
     st.sidebar.header("Instructions")
 
     st.sidebar.markdown(mdblock(
@@ -92,6 +98,18 @@ def main():
         key=SSKey.FILE_CURRENT_UPLOADED,
         on_change=_clear_uploaded_iam_df
     )
+
+    # dropdown menu to select definitions
+    st.write('---')
+    st.markdown("### Choose a validation profile")
+    selected_profile = st.selectbox(
+        label='Select a set of definitions to validate your data against:',
+        options=list(validation_profiles.keys()),
+        help='This determines the valid names, units, and aggregation rules for the data.'
+    )
+
+    # store the selected profile key in session state
+    st.session_state[SSKey.VALIDATION_PROFILE] = validation_profiles[selected_profile]
 
     # if uploaded_file is None:
     #     _clear_uploaded_iam_df()

@@ -143,12 +143,33 @@ def compute_ar6_vetting_checks(
     iamdf: pyam.IamDataFrame
 ) -> Mapping[str, PandasStyler]:
     """Compute vetting checks on the IAM DataFrame."""
-    return outputter.prepare_styled_output(
-        iamdf,
-        prepare_output_kwargs=dict(add_summary_output=True),
-        style_output_kwargs=dict(include_summary=True),
-    )
-###END def compute_ar6_vetting_checks
+    try:
+        return outputter.prepare_styled_output(
+            iamdf,
+            prepare_output_kwargs=dict(add_summary_output=True),
+            style_output_kwargs=dict(include_summary=True),
+        )
+
+    except ValueError as err:
+        msg = str(err)
+
+        # Catches missing-variable / missing-slice errors from AR6 vetting
+        if "is/are not available in the provided pyam.IamDataFrame" in msg:
+            st.warning(
+                """
+                **AR6 vetting could not be performed**
+
+                The uploaded dataset does not contain all variables required
+                for IPCC AR6 vetting (e.g. global CO₂ emissions for 2020).
+
+                This is expected for regional-only datasets or datasets
+                without AFOLU-inclusive global totals.
+                """
+            )
+            st.stop()
+
+        # Any other ValueError should still surface (real bug)
+        raise
 
 
 if __name__ == PAGE_RUN_NAME:
