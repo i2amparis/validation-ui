@@ -35,6 +35,8 @@ class SSKey(StrEnum):
 
     VALIDATION_DSD = 'validation_dsd'
     """Datastructure definition object to use for name validation."""
+    VALIDATION_DSD_PROFILE = 'validation_dsd_profile'
+    """Validation profile used to load the current datastructure definition."""
     VALIDATION_INVALID_NAMES_DICT = 'validation_invalid_names_dict'
     """Dictionary with invalid names per dimension.
 

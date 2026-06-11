@@ -268,7 +268,12 @@ def get_validation_dsd(
 
     dsd: DataStructureDefinition|None = st.session_state.get(
         SSKey.VALIDATION_DSD, None)
-    if (dsd is None and allow_load) or force_load:
+    loaded_profile = st.session_state.get(SSKey.VALIDATION_DSD_PROFILE)
+    if (
+        (dsd is None and allow_load)
+        or force_load
+        or loaded_profile != selected_profile
+    ):
         if show_spinner:
             with st.spinner('Loading datastructure definition...'):
                 dsd = icnom.get_dsd(force_reload=force_load,
@@ -277,6 +282,7 @@ def get_validation_dsd(
             dsd = icnom.get_dsd(force_reload=force_load,
             profile_name=selected_profile)
         st.session_state[SSKey.VALIDATION_DSD] = dsd
+        st.session_state[SSKey.VALIDATION_DSD_PROFILE] = selected_profile
     return dsd
 ###END def get_validation_dsd
 
