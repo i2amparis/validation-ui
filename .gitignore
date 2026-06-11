@@ -109,9 +109,6 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Runtime cache for validation profiles loaded from top-level nomenclatures/*.yaml
-.validation_profiles/
-
 # Translations
 *.mo
 *.pot

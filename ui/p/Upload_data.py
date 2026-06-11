@@ -4,6 +4,7 @@ import pandas as pd
 import pyam
 import streamlit as st
 from streamlit.elements.arrow import DataframeState
+import iamcompact_nomenclature as icnom
 
 from common_elements import (
     common_instructions,
@@ -18,7 +19,6 @@ from utils import (
     clean_triple_textblock as mdblock,
     get_empty_iam_df,
 )
-from validation_profiles import get_validation_profiles
 from page_defs import (
     PageKey,
     pages,
@@ -39,7 +39,7 @@ def main():
 
     st.header("Upload modelling results for vetting")
 
-    validation_profiles = get_validation_profiles()
+    validation_profiles = icnom.get_validation_profiles()
 
     st.sidebar.header("Instructions")
 

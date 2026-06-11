@@ -12,9 +12,8 @@ dependencies = [
     "pandas>=2.2.2",
     "python-calamine>=0.2.3",
     "pyam-iamc>=3.0.0",
-    "pyyaml>=6.0",
     "iamcompact-vetting @ git+https://github.com/ciceroOslo/iamcompact-vetting.git",
-    "iamcompact-nomenclature @ git+https://github.com/i2amparis/nomenclature-template.git@d72ef873ab26e03f6f20c17b8c17f50a9bbc5cec"
+    "iamcompact-nomenclature @ git+https://github.com/i2amparis/nomenclature-template.git@main"
 ]
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
