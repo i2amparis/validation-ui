@@ -412,7 +412,7 @@ wheels = [
 [[package]]
 name = "iamcompact-nomenclature"
 version = "0.10.1"
-source = { git = "https://github.com/i2amparis/nomenclature-template.git?rev=multi_nomenclature" }
+source = { git = "https://github.com/i2amparis/nomenclature-template.git?rev=multi_nomenclature#9d9e10073ea91e9d9553668eb569fad5b8fb84d6" }
 dependencies = [
     { name = "gitpython" },
     { name = "nomenclature-iamc" },
