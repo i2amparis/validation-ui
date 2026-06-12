@@ -21,8 +21,8 @@ To run the app locally, follow these steps (ask the developer if you are not
 familiar with setting up Python environments):
 
 * Clone the repository to your computer, and cd to it: Go to where you want to
-  download the repo, type `git clone https://github.com/ciceroOslo/iamcompact-validation-ui.git`
-  then `cd iamcompact-validation-ui`.
+  download the repo, type `git clone https://github.com/ciceroOslo/validation-ui.git`
+  then `cd validation-ui`.
 * Create a Python virtual environment based on Python 3.11 or 3.12, using any
   any Python environment/package management tool that lets you select a Python
   version (unless your system already has Python 3.11 or 3.12 installed).
@@ -54,4 +54,3 @@ Instructions are given directly in the app. More detailed documentation will fol
 ## License
 
 GPL-3.0-or-later
-
