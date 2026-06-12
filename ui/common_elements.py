@@ -261,9 +261,8 @@ def get_validation_dsd(
     """
 
     # Get the selected profile from session state.
-    # Use 'iamcompact-default' if no profile has been set yet.
     selected_profile = st.session_state.get(
-        SSKey.VALIDATION_PROFILE, 'iamcompact-default'
+        SSKey.VALIDATION_PROFILE, icnom.DEFAULT_PROFILE
     )
 
     dsd: DataStructureDefinition|None = st.session_state.get(
