@@ -410,7 +410,7 @@ wheels = [
 ]
 
 [[package]]
-name = "iamcompact-nomenclature"
+name = "nomenclature-adapter"
 version = "0.10.1"
 source = { git = "https://github.com/i2amparis/nomenclature-template.git?rev=multi_nomenclature#9d9e10073ea91e9d9553668eb569fad5b8fb84d6" }
 dependencies = [
@@ -425,7 +425,7 @@ name = "iamcompact-validation-ui"
 version = "0.5.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "iamcompact-nomenclature" },
+    { name = "nomenclature-adapter" },
     { name = "iamcompact-vetting" },
     { name = "pandas" },
     { name = "pyam-iamc" },
@@ -441,7 +441,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "iamcompact-nomenclature", git = "https://github.com/i2amparis/nomenclature-template.git", rev = "multi_nomenclature" },
+    { name = "nomenclature-adapter", git = "https://github.com/i2amparis/nomenclature-template.git", rev = "multi_nomenclature" },
     { name = "iamcompact-vetting", git = "https://github.com/ciceroOslo/iamcompact-vetting.git" },
     { name = "pandas", specifier = ">=2.2.2" },
     { name = "pyam-iamc", specifier = ">=3.0.0" },

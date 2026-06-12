@@ -6,7 +6,7 @@ import pyam
 import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 
-from iamcompact_nomenclature.mapping import map_regions
+from nomenclature_adapter.mapping import map_regions
 
 from common_elements import (
     check_data_is_uploaded,

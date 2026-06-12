@@ -4,7 +4,7 @@ import pandas as pd
 import pyam
 import streamlit as st
 from streamlit.elements.arrow import DataframeState
-import iamcompact_nomenclature as icnom
+import nomenclature_adapter as icnom
 
 from common_elements import (
     common_instructions,

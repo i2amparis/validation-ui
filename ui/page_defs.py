@@ -7,7 +7,7 @@ import typing as tp
 import streamlit as st
 from streamlit.navigation.page import StreamlitPage
 
-from iamcompact_nomenclature import dimensions as name_validation_dims
+from nomenclature_adapter import dimensions as name_validation_dims
 
 from p.name_validation_pages import (
     make_name_validation_dim_page,

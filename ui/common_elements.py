@@ -12,7 +12,7 @@ from pathlib import Path
 import typing as tp
 import warnings
 
-import iamcompact_nomenclature as icnom
+import nomenclature_adapter as icnom
 from iamcompact_vetting.output.base import (
     CriterionTargetRangeOutput,
     MultiCriterionTargetRangeOutput,
@@ -242,7 +242,7 @@ def get_validation_dsd(
     ----------
     allow_load : bool, optional
         Whether to allow loading the DataStructureDefinition object from the
-        source (the `iamcompact_nomenclature.get_dsd` method) if it has not
+        source (the `nomenclature_adapter.get_dsd` method) if it has not
         already been loaded. If False and the DataStructureDefinition object
         has not already been loaded, the function will return None.
     force_load : bool, optional
