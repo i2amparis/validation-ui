@@ -12,7 +12,7 @@ dependencies = [
     "pandas>=2.2.2",
     "python-calamine>=0.2.3",
     "pyam-iamc>=3.0.0",
-    "iamcompact-vetting @ git+https://github.com/ciceroOslo/iamcompact-vetting.git",
+    "iamcompact-vetting @ git+https://github.com/i2amparis/vetting-adapter.git@multi_nomenclature",
     "nomenclature-adapter @ git+https://github.com/i2amparis/nomenclature-adapter.git@multi_nomenclature"
 ]
 readme = "README.md"
