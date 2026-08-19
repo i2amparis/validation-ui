@@ -1,7 +1,7 @@
 [project]
 name = "validation-ui"
 version = "0.5.0"
-description = "User interface for IAM results validation and vetting in the IAM COMPACT project"
+description = "User interface for IAM results validation and vetting, supporting multiple projects via validation profiles"
 authors = [
     { name = "Jan Ivar Korsbakken", email = "janko@cicero.oslo.no" },
     { name = "George Xexakis" }
@@ -12,7 +12,7 @@ dependencies = [
     "pandas>=2.2.2",
     "python-calamine>=0.2.3",
     "pyam-iamc>=3.0.0",
-    "iamcompact-vetting @ git+https://github.com/i2amparis/vetting-adapter.git@multi_nomenclature",
+    "vetting-adapter @ git+https://github.com/i2amparis/vetting-adapter.git@multi_nomenclature",
     "nomenclature-adapter @ git+https://github.com/i2amparis/nomenclature-adapter.git@multi_nomenclature"
 ]
 readme = "README.md"

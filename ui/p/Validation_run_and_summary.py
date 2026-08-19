@@ -5,7 +5,6 @@ import pandas as pd
 import pyam
 import streamlit as st
 
-from iamcompact_vetting.output.excel import MultiDataFrameExcelWriter
 from nomenclature_adapter.validation import (
     get_invalid_model_regions,
     get_invalid_names,

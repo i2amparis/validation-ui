@@ -6,18 +6,17 @@ from pandas.io.formats.style import Styler as PandasStyler
 import pyam
 import streamlit as st
 
-from iamcompact_vetting.output.timeseries import (
+from vetting_adapter.core.output.timeseries import (
     CTCol,
     TimeseriesRefComparisonAndTargetOutput,
 )
-from iamcompact_vetting.output.iamcompact_outputs import \
-    gdp_pop_harmonization_output
 
 from common_elements import (
     check_data_is_uploaded,
     common_instructions,
     common_setup,
     download_excel_targetrange_output_button,
+    get_available_vetting_checks,
     make_passed_status_message,
 )
 from common_keys import (
@@ -30,11 +29,14 @@ from page_ids import PageName
 
 DATAFRAME_PIXELS_HEIGHT: int = 480
 
-# The functions below depend on a common iamcompact_vetting
-# MultiCriterionTargetRangeOutput object to compute vetting checks and to
-# produce output. It is set in the line below as a global variable (within this
-# file). Change it here if needed, rather than inside the functions.
-outputter: TimeseriesRefComparisonAndTargetOutput = gdp_pop_harmonization_output
+# The functions below depend on a common vetting_adapter
+# TimeseriesRefComparisonAndTargetOutput object to compute vetting checks and
+# to produce output. It is loaded from the currently selected validation
+# profile's available checks. This is a project-specific check (unlike AR6
+# vetting), so it may not be available for every profile -- `outputter` may
+# be None, which `main` checks for below.
+outputter: TimeseriesRefComparisonAndTargetOutput|None = \
+    get_available_vetting_checks().get('gdp_pop_harmonization')
 
 
 def main():
@@ -42,6 +44,14 @@ def main():
     common_setup()
 
     st.header('GDP and population harmonization assessment')
+
+    if outputter is None:
+        st.info(
+            'GDP and population harmonization is not available for the '
+            'currently selected validation profile.',
+            icon='ℹ️',
+        )
+        st.stop()
 
     check_data_is_uploaded(stop=True, display_message=True)
 
@@ -197,7 +207,7 @@ def compute_gdp_pop_harmonization_check(
     iamdf: pyam.IamDataFrame
 ) -> Mapping[str, PandasStyler]:
     try:
-        return gdp_pop_harmonization_output.prepare_styled_output(iamdf)
+        return outputter.prepare_styled_output(iamdf)
 
     except IndexError:
         st.warning(
@@ -238,30 +248,30 @@ def get_tolerance_range() -> tuple[float, float]:
         element is the lower range and the second element is the upper range.
     """
     target_range: tuple[float, float] | None \
-        = gdp_pop_harmonization_output.target_range.range
+        = outputter.target_range.range
     if target_range is None:
         raise RuntimeError(
             'The target range for '
-            f'{gdp_pop_harmonization_output.target_range.name} is not set. '
+            f'{outputter.target_range.name} is not set. '
             'This should not happen.'
         )
     return target_range
 ###END def get_tolerance_range
 
 def get_summary_df_key() -> str:
-    return gdp_pop_harmonization_output.summary_key
+    return outputter.summary_key
 ###END def get_summary_df_key
 
 def get_values_df_key() -> str:
-    return gdp_pop_harmonization_output.full_comparison_key
+    return outputter.full_comparison_key
 ###END def get_values_df_key
 
 def get_summary_df_in_range_col() -> str:
-    return gdp_pop_harmonization_output.summary_column_titles[CTCol.INRANGE]
+    return outputter.summary_column_titles[CTCol.INRANGE]
 ###END def get_summary_df_in_range_key
 
 def get_summary_df_values_col() -> str:
-    return gdp_pop_harmonization_output.summary_column_titles[CTCol.VALUE]
+    return outputter.summary_column_titles[CTCol.VALUE]
 ###END def get_summary_df_value_col
 
 

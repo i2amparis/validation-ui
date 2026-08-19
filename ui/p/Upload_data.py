@@ -110,6 +110,8 @@ def main():
     if st.session_state.get(SSKey.VALIDATION_PROFILE) != selected_profile_key:
         st.session_state.pop(SSKey.VALIDATION_DSD, None)
         st.session_state.pop(SSKey.VALIDATION_DSD_PROFILE, None)
+        st.session_state.pop(SSKey.VETTING_CHECKS, None)
+        st.session_state.pop(SSKey.VETTING_CHECKS_PROFILE, None)
     st.session_state[SSKey.VALIDATION_PROFILE] = selected_profile_key
 
     # if uploaded_file is None:

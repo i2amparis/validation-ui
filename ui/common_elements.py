@@ -13,11 +13,12 @@ import typing as tp
 import warnings
 
 import nomenclature_adapter as icnom
-from iamcompact_vetting.output.base import (
+import vetting_adapter as ivet
+from vetting_adapter.core.output.base import (
     CriterionTargetRangeOutput,
     MultiCriterionTargetRangeOutput,
 )
-from iamcompact_vetting.output.timeseries import \
+from vetting_adapter.core.output.timeseries import \
     TimeseriesRefComparisonAndTargetOutput
 from nomenclature import (
     CodeList,
@@ -284,6 +285,50 @@ def get_validation_dsd(
         st.session_state[SSKey.VALIDATION_DSD_PROFILE] = selected_profile
     return dsd
 ###END def get_validation_dsd
+
+
+def get_available_vetting_checks(
+        force_load: bool = False,
+        show_spinner: bool = True,
+) -> dict[str, tp.Any]:
+    """Get the vetting checks available for the currently selected profile.
+
+    Cached in session state per profile, the same way `get_validation_dsd`
+    caches the datastructure definition, so that this can be called on every
+    script rerun (e.g. to decide which pages to show in the sidebar) without
+    triggering a fresh profile resolution (and potential git fetch) each
+    time.
+
+    Parameters
+    ----------
+    force_load : bool, optional
+        Whether to force reloading the available checks, i.e., don't use a
+        cached result even if available. Optional, by default False.
+    show_spinner : bool, optional
+        Whether to show a spinner while loading. Optional, by default True.
+
+    Returns
+    -------
+    dict[str, object]
+        Mapping of check name to its output object, as returned by
+        `vetting_adapter.get_available_checks`.
+    """
+    selected_profile = st.session_state.get(
+        SSKey.VALIDATION_PROFILE, icnom.DEFAULT_PROFILE
+    )
+
+    checks: dict[str, tp.Any]|None = st.session_state.get(SSKey.VETTING_CHECKS)
+    loaded_profile = st.session_state.get(SSKey.VETTING_CHECKS_PROFILE)
+    if checks is None or force_load or loaded_profile != selected_profile:
+        if show_spinner:
+            with st.spinner('Loading available vetting checks...'):
+                checks = ivet.get_available_checks(profile_name=selected_profile)
+        else:
+            checks = ivet.get_available_checks(profile_name=selected_profile)
+        st.session_state[SSKey.VETTING_CHECKS] = checks
+        st.session_state[SSKey.VETTING_CHECKS_PROFILE] = selected_profile
+    return checks
+###END def get_available_vetting_checks
 
 
 def make_attribute_df(
