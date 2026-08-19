@@ -5,6 +5,7 @@ import pandas as pd
 import pyam
 import streamlit as st
 
+import nomenclature_adapter as icnom
 from nomenclature_adapter.validation import (
     get_invalid_model_regions,
     get_invalid_names,
@@ -58,9 +59,12 @@ def main():
         'to download the file.'
     )
 
+    selected_profile: str = st.session_state.get(
+        SSKey.VALIDATION_PROFILE, icnom.DEFAULT_PROFILE
+    )
     deferred_download_button(
         data_func=CachingFunction[bytes](make_dsd_excel_file),
-        download_file_name='iamcompact_validation_dsd.xlsx',
+        download_file_name=f'{selected_profile}_validation_dsd.xlsx',
         prepare_button_label='Prepare DSD download',
         download_button_label='Download DSD file',
     )

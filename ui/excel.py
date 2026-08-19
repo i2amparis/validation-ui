@@ -72,7 +72,7 @@ def get_excel_writer(
     The function returns an instance of an
     `vetting_adapter.core.output.excel.DataFrameExcelWriter` or
     `MultiDataFrameExcelWriter` subclass which can be used to write output from
-    `iamcompact-vetting` output objects to an Excel file or data stream.
+    `vetting_adapter` output objects to an Excel file or data stream.
 
     If no file or io buffer is specified, the function will by default return a
     writer instance that writes to a temporary file. The file will be deleted
