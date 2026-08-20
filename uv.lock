@@ -889,7 +889,7 @@ wheels = [
 [[package]]
 name = "nomenclature-adapter"
 version = "0.10.1"
-source = { git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=multi_nomenclature#9e4ec6513bd0a1022e13e4a76bd0dbd1d83d9bee" }
+source = { git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=main#bd21dee0a50da329512d5aadb05df4f43fb0206e" }
 dependencies = [
     { name = "gitpython" },
     { name = "nomenclature-iamc" },
@@ -1936,12 +1936,12 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "nomenclature-adapter", git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=multi_nomenclature" },
+    { name = "nomenclature-adapter", git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=main" },
     { name = "pandas", specifier = ">=2.2.2" },
     { name = "pyam-iamc", specifier = ">=3.0.0" },
     { name = "python-calamine", specifier = ">=0.2.3" },
     { name = "streamlit", specifier = ">=1.45" },
-    { name = "vetting-adapter", git = "https://github.com/i2amparis/vetting-adapter.git?rev=multi_nomenclature" },
+    { name = "vetting-adapter", git = "https://github.com/i2amparis/vetting-adapter.git?rev=main" },
     { name = "watchdog", specifier = ">=4.0.2" },
 ]
 
@@ -1951,7 +1951,7 @@ dev = [{ name = "ipython", specifier = ">=8.26.0" }]
 [[package]]
 name = "vetting-adapter"
 version = "0.1.0"
-source = { git = "https://github.com/i2amparis/vetting-adapter.git?rev=multi_nomenclature#51e902e0c08e46262b9ced401567f97dc9ea4599" }
+source = { git = "https://github.com/i2amparis/vetting-adapter.git?rev=main#9c0360b1015961603d7d09b01bafbfcf2ac9e14c" }
 dependencies = [
     { name = "jinja2" },
     { name = "nomenclature-adapter" },
