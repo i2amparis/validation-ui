@@ -14,7 +14,7 @@ Specification of the vetting criteria for IPCC AR6 vetting rules can be found
 in the IPCC AR6 Working Group III report, Annex III, Table 11
 ([link](https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf)).
 
-The app started as the [validation](https://github.com/i2amparis/validation) package of the IAM PARIS platform, which was then further adapted in [CICEROs `iamcompact-validation-ui`](https://github.com/ciceroOslo/iamcompact-validation-ui) for the model validation activities of the HORIZON EUROPE project IAM COMPACT. The package has been then brought back to the IAM PARIS platform where it has been generalized to support multiple projects through the validation profile
+The app started as the [validation](https://github.com/i2amparis/validation) package of the IAM PARIS platform, which was then further adapted in [CICEROs `iamcompact-validation-ui`](https://github.com/ciceroOslo/iamcompact-validation-ui) for the model validation activities of the HORIZON EUROPE project IAM COMPACT. The package has been brought back to the IAM PARIS platform where it has been generalized to support multiple projects through the validation profile
 selector described above (see also
 [`nomenclature-adapter`](https://github.com/i2amparis/nomenclature-adapter)
 and [`vetting-adapter`](https://github.com/i2amparis/vetting-adapter), which
