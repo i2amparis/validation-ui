@@ -12,12 +12,13 @@ from pathlib import Path
 import typing as tp
 import warnings
 
-import iamcompact_nomenclature as icnom
-from iamcompact_vetting.output.base import (
+import nomenclature_adapter as icnom
+import vetting_adapter as ivet
+from vetting_adapter.core.output.base import (
     CriterionTargetRangeOutput,
     MultiCriterionTargetRangeOutput,
 )
-from iamcompact_vetting.output.timeseries import \
+from vetting_adapter.core.output.timeseries import \
     TimeseriesRefComparisonAndTargetOutput
 from nomenclature import (
     CodeList,
@@ -242,7 +243,7 @@ def get_validation_dsd(
     ----------
     allow_load : bool, optional
         Whether to allow loading the DataStructureDefinition object from the
-        source (the `iamcompact_nomenclature.get_dsd` method) if it has not
+        source (the `nomenclature_adapter.get_dsd` method) if it has not
         already been loaded. If False and the DataStructureDefinition object
         has not already been loaded, the function will return None.
     force_load : bool, optional
@@ -261,14 +262,18 @@ def get_validation_dsd(
     """
 
     # Get the selected profile from session state.
-    # Use 'iamcompact-default' if no profile has been set yet.
     selected_profile = st.session_state.get(
-        SSKey.VALIDATION_PROFILE, 'iamcompact-default'
+        SSKey.VALIDATION_PROFILE, icnom.DEFAULT_PROFILE
     )
 
     dsd: DataStructureDefinition|None = st.session_state.get(
         SSKey.VALIDATION_DSD, None)
-    if (dsd is None and allow_load) or force_load:
+    loaded_profile = st.session_state.get(SSKey.VALIDATION_DSD_PROFILE)
+    if (
+        (dsd is None and allow_load)
+        or force_load
+        or loaded_profile != selected_profile
+    ):
         if show_spinner:
             with st.spinner('Loading datastructure definition...'):
                 dsd = icnom.get_dsd(force_reload=force_load,
@@ -277,8 +282,53 @@ def get_validation_dsd(
             dsd = icnom.get_dsd(force_reload=force_load,
             profile_name=selected_profile)
         st.session_state[SSKey.VALIDATION_DSD] = dsd
+        st.session_state[SSKey.VALIDATION_DSD_PROFILE] = selected_profile
     return dsd
 ###END def get_validation_dsd
+
+
+def get_available_vetting_checks(
+        force_load: bool = False,
+        show_spinner: bool = True,
+) -> dict[str, tp.Any]:
+    """Get the vetting checks available for the currently selected profile.
+
+    Cached in session state per profile, the same way `get_validation_dsd`
+    caches the datastructure definition, so that this can be called on every
+    script rerun (e.g. to decide which pages to show in the sidebar) without
+    triggering a fresh profile resolution (and potential git fetch) each
+    time.
+
+    Parameters
+    ----------
+    force_load : bool, optional
+        Whether to force reloading the available checks, i.e., don't use a
+        cached result even if available. Optional, by default False.
+    show_spinner : bool, optional
+        Whether to show a spinner while loading. Optional, by default True.
+
+    Returns
+    -------
+    dict[str, object]
+        Mapping of check name to its output object, as returned by
+        `vetting_adapter.get_available_checks`.
+    """
+    selected_profile = st.session_state.get(
+        SSKey.VALIDATION_PROFILE, icnom.DEFAULT_PROFILE
+    )
+
+    checks: dict[str, tp.Any]|None = st.session_state.get(SSKey.VETTING_CHECKS)
+    loaded_profile = st.session_state.get(SSKey.VETTING_CHECKS_PROFILE)
+    if checks is None or force_load or loaded_profile != selected_profile:
+        if show_spinner:
+            with st.spinner('Loading available vetting checks...'):
+                checks = ivet.get_available_checks(profile_name=selected_profile)
+        else:
+            checks = ivet.get_available_checks(profile_name=selected_profile)
+        st.session_state[SSKey.VETTING_CHECKS] = checks
+        st.session_state[SSKey.VETTING_CHECKS_PROFILE] = selected_profile
+    return checks
+###END def get_available_vetting_checks
 
 
 def make_attribute_df(

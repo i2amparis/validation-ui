@@ -6,15 +6,14 @@ from pandas.io.formats.style import Styler as PandasStyler
 import pyam
 import streamlit as st
 
-from iamcompact_vetting.output.base import MultiCriterionTargetRangeOutput
-from iamcompact_vetting.output.iamcompact_outputs import \
-    ar6_vetting_target_range_output
+from vetting_adapter.core.output.base import MultiCriterionTargetRangeOutput
 
 from common_elements import (
     check_data_is_uploaded,
     common_instructions,
     common_setup,
     download_excel_targetrange_output_button,
+    get_available_vetting_checks,
     make_passed_status_message,
 )
 from common_keys import (
@@ -26,11 +25,13 @@ from common_keys import (
 
 DATAFRAME_PIXELS_HEIGHT: int = 480
 
-# The functions below depend on a common iamcompact_vetting
+# The functions below depend on a common vetting_adapter
 # MultiCriterionTargetRangeOutput object to compute vetting checks and to
-# produce output. It is set in the line below as a global variable (within this
-# file). Change it here if needed, rather than inside the functions.
-outputter: MultiCriterionTargetRangeOutput = ar6_vetting_target_range_output
+# produce output. It is loaded from the currently selected validation
+# profile's available checks (AR6 vetting is a built-in check, available for
+# every profile, so this should never be None in practice).
+outputter: MultiCriterionTargetRangeOutput|None = \
+    get_available_vetting_checks().get('ar6_vetting')
 
 
 def main():
@@ -38,6 +39,14 @@ def main():
     common_setup()
 
     st.header('Vetting checks for IPCC AR6')
+
+    if outputter is None:
+        st.info(
+            'IPCC AR6 vetting is not available for the currently selected '
+            'validation profile.',
+            icon='ℹ️',
+        )
+        st.stop()
 
     check_data_is_uploaded(stop=True, display_message=True)
     uploaded_iamdf: pyam.IamDataFrame = st.session_state[SSKey.IAM_DF_UPLOADED]

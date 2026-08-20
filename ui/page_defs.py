@@ -7,7 +7,7 @@ import typing as tp
 import streamlit as st
 from streamlit.navigation.page import StreamlitPage
 
-from iamcompact_nomenclature import dimensions as name_validation_dims
+from nomenclature_adapter import dimensions as name_validation_dims
 
 from p.name_validation_pages import (
     make_name_validation_dim_page,
@@ -32,6 +32,17 @@ name_validation_dim_pagenames: tp.Final[dict[str, PageName]] = {
     'scenario': PageName.SCENARIO_VALIDATION_SCENARIO,
     'region': PageName.NAME_VALIDATION_REGION,
 }
+
+vetting_check_pagekeys: tp.Final[dict[str, PageKey]] = {
+    'ar6_vetting': PageKey.AR6_VETTING,
+    'gdp_pop_harmonization': PageKey.GDP_POP_HARMONIZATION,
+}
+"""Maps a vetting check name (as returned by
+`vetting_adapter.get_available_checks`) to the page that displays it. Only
+checks with an entry here get a page in the "Vetting" section of the sidebar,
+and only if the check is actually available for the selected profile (see
+`main.py`).
+"""
 
 page_folder: tp.Final[Path] = Path(__file__).parent / 'p'
 

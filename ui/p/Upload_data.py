@@ -4,6 +4,7 @@ import pandas as pd
 import pyam
 import streamlit as st
 from streamlit.elements.arrow import DataframeState
+import nomenclature_adapter as icnom
 
 from common_elements import (
     common_instructions,
@@ -38,11 +39,7 @@ def main():
 
     st.header("Upload modelling results for vetting")
 
-    validation_profiles = {
-    'IAM COMPACT Default': 'iamcompact-default',
-    'New Definitions': 'new-project-defs',
-    # Add more options here...
-    }
+    validation_profiles = icnom.get_validation_profiles()
 
     st.sidebar.header("Instructions")
 
@@ -109,7 +106,13 @@ def main():
     )
 
     # store the selected profile key in session state
-    st.session_state[SSKey.VALIDATION_PROFILE] = validation_profiles[selected_profile]
+    selected_profile_key = validation_profiles[selected_profile]
+    if st.session_state.get(SSKey.VALIDATION_PROFILE) != selected_profile_key:
+        st.session_state.pop(SSKey.VALIDATION_DSD, None)
+        st.session_state.pop(SSKey.VALIDATION_DSD_PROFILE, None)
+        st.session_state.pop(SSKey.VETTING_CHECKS, None)
+        st.session_state.pop(SSKey.VETTING_CHECKS_PROFILE, None)
+    st.session_state[SSKey.VALIDATION_PROFILE] = selected_profile_key
 
     # if uploaded_file is None:
     #     _clear_uploaded_iam_df()

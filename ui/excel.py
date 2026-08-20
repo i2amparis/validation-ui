@@ -7,16 +7,16 @@ import typing as tp
 import pandas as pd
 from pandas.io.formats.style import Styler as PandasStyler
 
-from iamcompact_vetting.output.base import (
+from vetting_adapter.core.output.base import (
     CriterionTargetRangeOutput,
     MultiCriterionTargetRangeOutput,
 )
-from iamcompact_vetting.output.excel import (
+from vetting_adapter.core.output.excel import (
     DataFrameExcelWriter,
     ExcelFileSpec,
     MultiDataFrameExcelWriter,
 )
-from iamcompact_vetting.output.timeseries import \
+from vetting_adapter.core.output.timeseries import \
     TimeseriesRefComparisonAndTargetOutput
 
 
@@ -70,9 +70,9 @@ def get_excel_writer(
     """Get an ExcelWriter instance.
 
     The function returns an instance of an
-    `iamcompact_vetting.output.excel.DataFrameExcelWriter` or
+    `vetting_adapter.core.output.excel.DataFrameExcelWriter` or
     `MultiDataFrameExcelWriter` subclass which can be used to write output from
-    `iamcompact-vetting` output objects to an Excel file or data stream.
+    `vetting_adapter` output objects to an Excel file or data stream.
 
     If no file or io buffer is specified, the function will by default return a
     writer instance that writes to a temporary file. The file will be deleted
@@ -214,7 +214,7 @@ def write_excel_targetrange_output(
         state.
     file, optional
         A file, stream or `pandas.ExcelWriter` to write to. Any argument that
-        is accepted by `iamcompact_vetting.output.excel.ExcelWriterBase`.
+        is accepted by `vetting_adapter.core.output.excel.ExcelWriterBase`.
         Optional. If None, a temporary file will be used, and a `pathlib.Path`
         object pointing to that file will be returned.
     use_existing_writer : bool, optional

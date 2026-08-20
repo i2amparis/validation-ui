@@ -3,10 +3,9 @@
 from enum import StrEnum
 import typing as tp
 
-from iamcompact_vetting.output.iamcompact_outputs import (
-    CTCol,
-    IamCompactMultiTargetRangeOutput,
-)
+from vetting_adapter.core.output.base import CTCol
+from vetting_adapter.general_checks.ar6_vetting import \
+    ar6_vetting_target_range_output
 
 
 
@@ -35,6 +34,15 @@ class SSKey(StrEnum):
 
     VALIDATION_DSD = 'validation_dsd'
     """Datastructure definition object to use for name validation."""
+    VALIDATION_DSD_PROFILE = 'validation_dsd_profile'
+    """Validation profile used to load the current datastructure definition."""
+
+    VETTING_CHECKS = 'vetting_checks'
+    """Dict of available vetting checks (name -> output object) for the
+    currently selected validation profile.
+    """
+    VETTING_CHECKS_PROFILE = 'vetting_checks_profile'
+    """Validation profile used to load `VETTING_CHECKS`."""
     VALIDATION_INVALID_NAMES_DICT = 'validation_invalid_names_dict'
     """Dictionary with invalid names per dimension.
 
@@ -139,11 +147,11 @@ class Ar6CriterionOutputKey(StrEnum):
     """Keys used in output from AR6 criterion `.prepare_output` methods."""
 
     INRANGE = \
-        IamCompactMultiTargetRangeOutput._default_summary_keys[CTCol.INRANGE]
+        ar6_vetting_target_range_output._default_summary_keys[CTCol.INRANGE]
     """Key for DataFrame with in-range/not-in-range status, i.e., pass/fail."""
 
     VALUE = \
-        IamCompactMultiTargetRangeOutput._default_summary_keys[CTCol.VALUE]
+        ar6_vetting_target_range_output._default_summary_keys[CTCol.VALUE]
     """Key for DataFrame with values returned by each criterion."""
 
 ###END class CriterionOutputKey

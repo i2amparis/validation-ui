@@ -231,3 +231,5 @@ pyrightconfig.json
 
 # Custom folders
 sandbox_utils/
+
+*.code-workspace
