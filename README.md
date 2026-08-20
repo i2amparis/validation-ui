@@ -4,8 +4,7 @@
 
 This app is used for performing name-validation and region-mapping on the
 modelling results of Integrated Assessment Models (IAMs), as well as vetting
-using the vetting criteria from IPCC AR6, and comparison with harmonization
-data (at the moment only population and GDP). The app supports multiple
+using the vetting criteria from IPCC AR6, and other harmonisation and feasibility checks. The app supports multiple
 projects via a validation profile selector (e.g. IAM COMPACT, TRANSIENCE),
 each with its own set of valid model/region/variable/scenario names and
 region mappings; see [`nomenclature-adapter`](https://github.com/i2amparis/nomenclature-adapter)
@@ -15,14 +14,7 @@ Specification of the vetting criteria for IPCC AR6 vetting rules can be found
 in the IPCC AR6 Working Group III report, Annex III, Table 11
 ([link](https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf)).
 
-The app is built in Python and Streamlit and will be eventually integrated in
-I2AM PARIS, an open-access, data exchange platform for modelling results
-([link](https://i2am-paris.eu)).
-It is based on a fork from the [I2AM Paris validation app](https://github.com/i2amparis/validation).
-
-This app itself started as [CICERO's `iamcompact-validation-ui`](https://github.com/ciceroOslo/iamcompact-validation-ui),
-built specifically for the HORIZON EUROPE project IAM COMPACT, and has since
-been generalized to support multiple projects through the validation profile
+The app started as the [validation](https://github.com/i2amparis/validation) package of the IAM PARIS platform, which was then further adapted in [CICEROs `iamcompact-validation-ui`](https://github.com/ciceroOslo/iamcompact-validation-ui) for the model validation activities of the HORIZON EUROPE project IAM COMPACT. The package has been then brought back to the IAM PARIS platform where it has been generalized to support multiple projects through the validation profile
 selector described above (see also
 [`nomenclature-adapter`](https://github.com/i2amparis/nomenclature-adapter)
 and [`vetting-adapter`](https://github.com/i2amparis/vetting-adapter), which
@@ -31,8 +23,7 @@ origins).
 
 ## Installation
 
-To run the app locally, follow these steps (ask the developer if you are not
-familiar with setting up Python environments):
+To run the app locally, follow these steps:
 
 * Clone the repository to your computer, and cd to it: Go to where you want to
   download the repo, type `git clone https://github.com/i2amparis/validation-ui.git`
@@ -46,6 +37,7 @@ familiar with setting up Python environments):
   dependencies.
 
 You can then run the app as follows:
+
 * In the repo directory, type `streamlit run ui/main.py`
 * Go to `http://localhost:8501` in your browser.
 
@@ -59,7 +51,6 @@ environment. The commands are (assuming you want to name your image
   (make sure to include the final `.` period!)
 * Run the image: `docker run -p 8501:8501 validation_ui`. The `-p`
   option is needed to connect to the required network port.
-
 
 ## Documentation
 
