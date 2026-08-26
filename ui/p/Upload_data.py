@@ -99,9 +99,26 @@ def main():
     # dropdown menu to select definitions
     st.write('---')
     st.markdown("### Choose a validation profile")
+    profile_labels: list[str] = list(validation_profiles.keys())
+    profile_name_to_label: dict[str, str] = {
+        _name: _label for _label, _name in validation_profiles.items()
+    }
+    # Pre-select whatever profile is already active in session state (e.g.
+    # from a previous visit to this page), rather than always defaulting to
+    # the first option -- otherwise navigating away and back would silently
+    # reset the selection back to the default profile on the very next
+    # rerun of this page (see the unconditional assignment below).
+    current_profile_name: str = st.session_state.get(
+        SSKey.VALIDATION_PROFILE, icnom.DEFAULT_PROFILE
+    )
+    current_label: str = profile_name_to_label.get(
+        current_profile_name, profile_labels[0]
+    )
     selected_profile = st.selectbox(
         label='Select a set of definitions to validate your data against:',
-        options=list(validation_profiles.keys()),
+        options=profile_labels,
+        index=profile_labels.index(current_label),
+        key='validation_profile_selectbox',
         help='This determines the valid names, units, and aggregation rules for the data.'
     )
 

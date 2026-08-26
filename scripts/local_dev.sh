@@ -123,10 +123,11 @@ do_on() {
 
 do_run() {
   require_repo_root
-  if [ ! -d "$CACHE_DIR" ]; then
-    log "No local-dev cache yet -- running 'on' first."
-    do_on
-  fi
+  # Always refresh -- both the editable installs and the definitions-repo
+  # cache -- so `run` never silently serves stale code just because a cache
+  # directory happens to exist from an earlier session. `on` is cheap and
+  # idempotent (a local `git fetch` per repo plus a `uv pip install -e`).
+  do_on
   log "Starting streamlit with NOMENCLATURE_PROFILE_CACHE=$CACHE_DIR"
   cd "$REPO_ROOT"
   NOMENCLATURE_PROFILE_CACHE="$CACHE_DIR" exec uv run streamlit run ui/main.py "$@"
