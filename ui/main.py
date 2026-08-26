@@ -40,7 +40,7 @@ page: StreamlitPage = st.navigation(
         '3. Region mapping': [
             pages[PageKey.REGION_MAPPING],
         ],
-        '4. Vetting': _vetting_pages,
+        '4. Validation of data': _vetting_pages,
     }
 )
 page.run()
