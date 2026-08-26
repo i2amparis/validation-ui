@@ -39,6 +39,9 @@ class PageName(StrEnum):
 
     GDP_POP_HARMONIZATION = 'GDP and population harmonization'
 
+    MS16_HISTORICAL = 'Sectoral validation (MS16)'
+    """Page for the TRANSIENCE MS16 historical-data diagnostic comparison"""
+
 ###END class PageName
 
 

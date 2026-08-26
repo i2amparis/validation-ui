@@ -107,6 +107,22 @@ class SSKey(StrEnum):
     harmonization results. None if no download file has been prepared yet.
     """
 
+    MS16_HISTORICAL_RUN_WITH_NON_REGIONMAPPED = \
+        'ms16_historical_run_with_non_regionmapped'
+    """Whether the TRANSIENCE MS16 historical-comparison check may previously
+    have been run with non-region-mapped data. If True and region-mapped data
+    is available, it means that previously computed results should be
+    cleared and recomputed.
+    """
+    MS16_HISTORICAL_RESULTS = 'ms16_historical_results'
+    """Per-criterion results for the TRANSIENCE MS16 historical-comparison
+    check: a dict mapping criterion name to a dict with keys `status`
+    (`"applicable"`, `"approximated"` or `"not_applicable"`), `tables` (the
+    dict returned by `HistoricalComparisonOutput.prepare_output`, or None if
+    not applicable) and `unit` (the reference unit, for display in the "not
+    applicable" listing).
+    """
+
     DISMISSED_WARNING = 'dismissed_warning'
     """Whether the warning about not using browser navigation buttons has been
     dismissed.
@@ -129,6 +145,7 @@ data_file_upload_clear_keys: tp.Final[tp.List[SSKey]] = [
     SSKey.GDP_POP_OUTPUT_DFS,
     SSKey.GDP_POP_ALL_PASSED,
     SSKey.GDP_POP_ALL_INCLUDED,
+    SSKey.MS16_HISTORICAL_RESULTS,
 ]
 
 

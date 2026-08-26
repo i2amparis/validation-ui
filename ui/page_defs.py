@@ -36,6 +36,7 @@ name_validation_dim_pagenames: tp.Final[dict[str, PageName]] = {
 vetting_check_pagekeys: tp.Final[dict[str, PageKey]] = {
     'ar6_vetting': PageKey.AR6_VETTING,
     'gdp_pop_harmonization': PageKey.GDP_POP_HARMONIZATION,
+    'transience_ms16_historical': PageKey.MS16_HISTORICAL,
 }
 """Maps a vetting check name (as returned by
 `vetting_adapter.get_available_checks`) to the page that displays it. Only
@@ -94,5 +95,9 @@ pages: tp.Final[dict[PageKey, StreamlitPage]] = {
     PageKey.GDP_POP_HARMONIZATION: st.Page(
         page_folder / 'Pop_GDP_harmonization.py',
         title=PageName.GDP_POP_HARMONIZATION,
+    ),
+    PageKey.MS16_HISTORICAL: st.Page(
+        page_folder / 'Historical_data_comparison.py',
+        title=PageName.MS16_HISTORICAL,
     ),
 }
