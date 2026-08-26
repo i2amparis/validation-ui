@@ -233,3 +233,6 @@ pyrightconfig.json
 sandbox_utils/
 
 *.code-workspace
+
+# Local-testing helper (scripts/local_dev.sh) cache
+.local-dev-cache/
