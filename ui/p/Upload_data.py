@@ -124,12 +124,23 @@ def main():
 
     # store the selected profile key in session state
     selected_profile_key = validation_profiles[selected_profile]
-    if st.session_state.get(SSKey.VALIDATION_PROFILE) != selected_profile_key:
+    profile_changed = \
+        st.session_state.get(SSKey.VALIDATION_PROFILE) != selected_profile_key
+    if profile_changed:
         st.session_state.pop(SSKey.VALIDATION_DSD, None)
         st.session_state.pop(SSKey.VALIDATION_DSD_PROFILE, None)
         st.session_state.pop(SSKey.VETTING_CHECKS, None)
         st.session_state.pop(SSKey.VETTING_CHECKS_PROFILE, None)
     st.session_state[SSKey.VALIDATION_PROFILE] = selected_profile_key
+    if profile_changed:
+        # main.py reads SSKey.VALIDATION_PROFILE (to decide which vetting
+        # pages to show in the sidebar) *before* this page's script runs --
+        # i.e. before the line above takes effect. Without an explicit
+        # rerun here, that sidebar (and anything else read early in
+        # main.py) stays built from the *previous* profile until some
+        # later, unrelated interaction triggers another rerun. Rerunning
+        # now makes the switch take effect on this same click.
+        st.rerun()
 
     # if uploaded_file is None:
     #     _clear_uploaded_iam_df()
