@@ -889,7 +889,7 @@ wheels = [
 [[package]]
 name = "nomenclature-adapter"
 version = "0.10.1"
-source = { git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=main#bd21dee0a50da329512d5aadb05df4f43fb0206e" }
+source = { git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=main#7b200633737c9dfb674a973bbc023790236300ce" }
 dependencies = [
     { name = "gitpython" },
     { name = "nomenclature-iamc" },
@@ -1951,7 +1951,7 @@ dev = [{ name = "ipython", specifier = ">=8.26.0" }]
 [[package]]
 name = "vetting-adapter"
 version = "0.1.0"
-source = { git = "https://github.com/i2amparis/vetting-adapter.git?rev=main#9c0360b1015961603d7d09b01bafbfcf2ac9e14c" }
+source = { git = "https://github.com/i2amparis/vetting-adapter.git?rev=main#17a6280f08079154ebbf6be8045fb252356d9136" }
 dependencies = [
     { name = "jinja2" },
     { name = "nomenclature-adapter" },
