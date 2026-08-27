@@ -1,6 +1,11 @@
 .git/
 .ruff_cache/
-/.streamlit/
+# NB! Only excludes secrets, not the whole .streamlit/ directory -- that
+# directory's config.toml (e.g. server.maxUploadSize) needs to reach the
+# image, or Streamlit silently falls back to its built-in defaults with no
+# error. If .streamlit/secrets.toml exists locally, keep it out of the image
+# regardless (this file is for local development secrets, not deployment).
+.streamlit/secrets.toml
 .venv/
 .vscode/
 /build/
