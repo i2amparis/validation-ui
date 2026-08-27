@@ -236,3 +236,7 @@ sandbox_utils/
 
 # Local-testing helper (scripts/local_dev.sh) cache
 .local-dev-cache/
+
+# Claude agent support
+.agents
+.claude
