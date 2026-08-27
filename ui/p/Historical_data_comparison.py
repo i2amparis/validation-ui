@@ -154,16 +154,22 @@ def main():
                 'uploaded dataset (missing variable, region, or years):'
             )
             st.dataframe(
-                pd.DataFrame(
+                pd.DataFrame([
                     {
-                        'Reference (variable and region)': not_applicable_names,
-                        'Unit': [
-                            results[_name]['unit']
-                            for _name in not_applicable_names
-                        ],
+                        'Variable': results[_name]['variable'],
+                        'Region': results[_name]['region'],
+                        'Unit': results[_name]['unit'],
+                        'Source': results[_name]['source_name'] or '—',
+                        'Source link': results[_name]['source_url'],
                     }
-                ),
+                    for _name in not_applicable_names
+                ]),
                 hide_index=True,
+                column_config={
+                    'Source link': st.column_config.LinkColumn(
+                        display_text='Open',
+                    ),
+                },
             )
 
 ###END def main
@@ -185,6 +191,21 @@ def _drop_redundant_levels(df: pd.DataFrame) -> pd.DataFrame:
 ###END def _drop_redundant_levels
 
 
+def _source_caption(
+        source_name: tp.Optional[str],
+        source_url: tp.Optional[str],
+) -> str:
+    """Markdown snippet citing a reference value's source, for display next
+    to the comparison. Falls back to a plain "not available" note if the
+    checkset didn't supply a citation for this variable."""
+    if not source_name:
+        return '_not available_'
+    if source_url:
+        return f'[{source_name}]({source_url})'
+    return source_name
+###END def _source_caption
+
+
 def _render_comparison(
         name: str,
         result: dict[str, tp.Any],
@@ -192,6 +213,12 @@ def _render_comparison(
         with_pct_diff: bool,
 ) -> None:
     with st.expander(name):
+        st.markdown(
+            f"**Variable:** `{result['variable']}`  \n"
+            f"**Region:** `{result['region']}`  \n"
+            f"**Unit:** {result['unit']}  \n"
+            f"**Source:** {_source_caption(result['source_name'], result['source_url'])}"
+        )
         tables: dict[str, pd.DataFrame] = result['tables']
         st.markdown('**Checked data**')
         st.dataframe(_drop_redundant_levels(tables[CHECKED_VALUES_KEY]))
@@ -219,18 +246,25 @@ def compute_ms16_historical_results(
     """
     results: dict[str, dict[str, tp.Any]] = {}
     for _name, _candidates in outputter.criteria.items():
-        _unit: str = str(_candidates[0].reference.unit[0])
+        _template = _candidates[0]
+        _common: dict[str, tp.Any] = {
+            'variable': _template.variable,
+            'region': _template.region,
+            'unit': str(_template.reference.unit[0]),
+            'source_name': _template.source_name,
+            'source_url': _template.source_url,
+        }
         _output = outputter.get_applicable_output(_name, iamdf)
         if _output is None:
             results[_name] = {
-                'status': 'not_applicable', 'tables': None, 'unit': _unit,
+                'status': 'not_applicable', 'tables': None, **_common,
             }
             continue
         results[_name] = {
             'status': 'applicable' if _output.include_pct_diff
                 else 'approximated',
             'tables': _output.prepare_output(iamdf),
-            'unit': _unit,
+            **_common,
         }
     return results
 ###END def compute_ms16_historical_results
