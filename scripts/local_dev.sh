@@ -121,8 +121,46 @@ do_on() {
   log "Done. Next: scripts/local_dev.sh run"
 }
 
+kill_stale_server() {
+  # Python only imports a package once per process, and Streamlit's
+  # file-watcher hot-reload only re-runs this app's own ui/*.py scripts --
+  # it does NOT reimport vetting-adapter/nomenclature-adapter, so a server
+  # left running from before a local edit (or before switching `on`/`off`)
+  # keeps serving the OLD code indefinitely, no matter how many times `on`
+  # refreshes the venv/cache on disk. Kill any prior instance of *this*
+  # app (matched by both command line and working directory, so this never
+  # touches an unrelated streamlit app you might have running elsewhere)
+  # before starting a fresh one.
+  local pids pid cwd comm
+  pids="$(pgrep -f 'streamlit run ui/main\.py' 2>/dev/null || true)"
+  [ -z "$pids" ] && return
+  for pid in $pids; do
+    # Belt and braces beyond the pgrep pattern match: also require the
+    # process's own executable to actually be streamlit/python, and its cwd
+    # to be this repo. Guards against matching an unrelated process (e.g. a
+    # shell) whose command line merely *mentions* the search string, rather
+    # than being the server itself.
+    comm="$(ps -p "$pid" -o comm= 2>/dev/null || true)"
+    case "$comm" in
+      *[Ss]treamlit*|*[Pp]ython*) ;;
+      *) continue ;;
+    esac
+    cwd="$(lsof -a -d cwd -p "$pid" -Fn 2>/dev/null | sed -n 's/^n//p')"
+    if [ "$cwd" = "$REPO_ROOT" ]; then
+      log "Stopping previous local-dev server (pid $pid) so it picks up the latest code..."
+      kill "$pid" 2>/dev/null || true
+      for _ in 1 2 3 4 5 6 7 8 9 10; do
+        kill -0 "$pid" 2>/dev/null || break
+        sleep 0.5
+      done
+      kill -9 "$pid" 2>/dev/null || true
+    fi
+  done
+}
+
 do_run() {
   require_repo_root
+  kill_stale_server
   # Always refresh -- both the editable installs and the definitions-repo
   # cache -- so `run` never silently serves stale code just because a cache
   # directory happens to exist from an earlier session. `on` is cheap and
