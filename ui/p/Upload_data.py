@@ -37,7 +37,7 @@ def main():
 
     common_setup()
 
-    st.header("Upload modelling results for vetting")
+    st.header("Upload modelling results for validation")
 
     validation_profiles = icnom.get_validation_profiles()
 
@@ -45,7 +45,7 @@ def main():
 
     st.sidebar.markdown(mdblock(
         """Upload a file with modelling results using the page to the right,
-        then go to subsequent pages to perform different vetting checks and view
+        then go to subsequent pages to perform different validation checks and view
         or download the results.
 
         The file to upload should be an Excel (.xlsx) or CSV file in IAMC \
@@ -58,14 +58,14 @@ def main():
           etc.)
         * If you require additional columns (like "Subannual"), please contact
           the developers. Non-standard columns are likely to cause problems for
-          the current version of the vetting checks.
+          the current version of the validation checks.
 
         ### Excel file worksheets
         If uploading an Excel file:
         * All data (other than metadata) must be in one or more worksheets with
           names that start with "data" or "Data".
         * Metadata must be in a worksheet named "meta" (case-sensitive), though
-          the metadata is not used in the current vetting checks and therefore
+          the metadata is not used in the current validation checks and therefore
           is ignored for now.
         * All other worksheets will be ignored.
 
