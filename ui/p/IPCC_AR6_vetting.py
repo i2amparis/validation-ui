@@ -101,42 +101,37 @@ def main():
         )
 
     in_range_tab, values_tab, descriptions_tab = st.tabs(
-        ['Statuses', 'Values', 'All checks']
+        ['Status', 'Values', 'All checks']
     )
-    _tab_data: PandasStyler
     with in_range_tab:
         st.markdown(
-            'Pass status per model and scenario.\n\n'
+            'Pass status per check (rows) and model/scenario (columns).\n\n'
                 '<span style="color: green"><b>✅</b></span> for passed, '
                 '<span style="color: red"><b>❌</b></span> for not passed, '
                 'blank or `None` with <span style="background-color: lightgrey">grey background</span> for not assessed (required data not present):',
             unsafe_allow_html=True,
         )
-        _tab_data = ar6_vetting_output_dfs[Ar6CriterionOutputKey.INRANGE]
-        # _tab_data = ar6_vetting_output_dfs[CriterionOutputKey.INRANGE].format(lambda x: 'missing' if pd.isna(x) else '✅' if x==True else '❌' if x==False else '')
-        # st.write(_tab_data.to_html(), unsafe_allow_html=True)
         st.dataframe(
-            # _tab_data.data.map(lambda x: 'missing' if pd.isna(x) else '✅' if x==True else '❌' if x==False else 'unknown'),
-            _tab_data.format(lambda x: 'missing' if pd.isna(x) else '✅' if x==True else '❌' if x==False else '', na_rep='missing'),
-            column_config={_col: st.column_config.TextColumn()
-                           for _col in _tab_data.data.columns},
+            _transpose_inrange(
+                ar6_vetting_output_dfs[Ar6CriterionOutputKey.INRANGE].data
+            ),
             height=DATAFRAME_PIXELS_HEIGHT,
         )
     with values_tab:
         st.markdown(
-            'Values calculated for the vetting criteria per model and '
-            'scenario. <span style="color: violet"><b>Violet</b></span> for '
-            'numbers below range, <span style="color: red"><b>red</b></span> '
-            'for numbers above range, blank or `None` with '
+            'Values calculated for the vetting criteria per check (rows) '
+            'and model/scenario (columns). '
+            '<span style="color: red"><b>Red</b></span> for numbers below '
+            'range, <span style="color: violet"><b>violet</b></span> for '
+            'numbers above range, blank or `None` with '
             '<span style="background-color: lightgrey">grey background</span> for not assessed (required data not present):',
             unsafe_allow_html=True,
         )
-        _tab_data = ar6_vetting_output_dfs[Ar6CriterionOutputKey.VALUE]
         st.dataframe(
-            _tab_data.format(thousands=' '),
-            # column_config={
-            #     _col: st.column_config.TextColumn()
-            #     for _col in _tab_data.data.columns}
+            _transpose_values(
+                outputter,
+                ar6_vetting_output_dfs[Ar6CriterionOutputKey.VALUE].data,
+            ),
             height=DATAFRAME_PIXELS_HEIGHT,
         )
     with descriptions_tab:
@@ -167,10 +162,10 @@ def main():
     )
     st.markdown(
         'Download full results as an Excel file.\n'
-        'The file includes the "Statuses" and "Values" tabs shown here, as '
-        'well as a separate tab with both status and values for each '
-        'criterion. The file uses boolean TRUE/FALSE values rather than '
-        'checkboxes.'
+        'The file includes the "Status" and "Values" tabs shown here (in '
+        'their original, non-transposed orientation), as well as a '
+        'separate tab with both status and values for each criterion. The '
+        'file uses boolean TRUE/FALSE values rather than checkboxes.'
     )
 
 ###END def main
@@ -217,6 +212,84 @@ def compute_ar6_vetting_checks(
 
         # Any other ValueError should still surface (real bug)
         raise
+
+
+_COMMON_INDEX_STYLE: tp.Final[str] = 'font-weight: bold; text-align: left'
+_COMMON_COLUMN_STYLE: tp.Final[str] = 'font-weight: bold'
+
+
+def _bold_headers(styler: PandasStyler) -> PandasStyler:
+    """Bold the row and column headers of a Styler, matching the header
+    style vetting_adapter applies to its own (non-transposed) output.
+
+    `Styler.map_index(..., axis=...)` followed by rendering raises a
+    spurious pandas `KeyError` when the corresponding axis has zero
+    entries (same underlying pandas bug worked around in vetting_adapter's
+    `apply_common_styling` for the non-transposed axis=0 case) -- after
+    transposing, either axis can end up empty (e.g. the "all criteria
+    inapplicable" case has zero model/scenario columns), so both are
+    guarded here.
+    """
+    if len(styler.data.index) > 0:
+        styler = styler.map_index(lambda x: _COMMON_INDEX_STYLE, axis=0)
+    if len(styler.data.columns) > 0:
+        styler = styler.map_index(lambda x: _COMMON_COLUMN_STYLE, axis=1)
+    return styler
+###END def _bold_headers
+
+
+def _transpose_inrange(inrange_df: pd.DataFrame) -> PandasStyler:
+    """Transpose the pass/fail summary (checks as rows, model/scenario as
+    columns) and reapply the same pass/fail styling vetting_adapter applies
+    in the original (model/scenario as rows) orientation. The styling is a
+    pure function of each cell's value, so it transposes safely without
+    needing to touch vetting_adapter's own styling machinery.
+    """
+    styler: PandasStyler = inrange_df.T.style.format(
+        lambda x: 'missing' if pd.isna(x) else '✅' if x == True else '❌' \
+            if x == False else '',
+        na_rep='missing',
+    ).map(
+        lambda x: 'color: black; background-color: lightgrey' if pd.isna(x)
+            else 'color: green' if x == True
+            else 'color: red; font-weight: bold',
+    )
+    return _bold_headers(styler)
+###END def _transpose_inrange
+
+
+def _transpose_values(
+        multi_output: MultiCriterionTargetRangeOutput,
+        values_df: pd.DataFrame,
+) -> PandasStyler:
+    """Transpose the values summary (checks as rows, model/scenario as
+    columns) and reapply per-criterion below/above-range styling.
+
+    Unlike `_transpose_inrange`, the styling here depends on which criterion
+    a cell belongs to (each has its own target range), which after
+    transposing means it depends on the cell's *row* rather than a fixed
+    function of the value alone -- so each criterion's row is styled with
+    its own `CriterionTargetRange.is_below_range`/`.is_above_range`, one
+    `Styler.map` call per row (there are only 12 rows for AR6).
+    """
+    transposed: pd.DataFrame = values_df.T
+    styler: PandasStyler = transposed.style.format(thousands=' ')
+    for _name, _criterion in multi_output.criteria.items():
+        if _name not in transposed.index or _criterion.range is None:
+            continue
+        def _style_row(x: tp.Any, _crit=_criterion) -> str | None:
+            if pd.isna(x):
+                return 'color: black; background-color: lightgrey'
+            if _crit.is_in_range(x) == True:
+                return ''
+            if _crit.is_below_range(x) == True:
+                return 'color: red; font-weight: bold'
+            if _crit.is_above_range(x) == True:
+                return 'color: violet; font-weight: bold'
+            return None
+        styler = styler.map(_style_row, subset=pd.IndexSlice[[_name], :])
+    return _bold_headers(styler)
+###END def _transpose_values
 
 
 _REQUIREMENT_COLUMN_TITLES: tp.Final[dict[str, str]] = {
