@@ -997,7 +997,7 @@ wheels = [
 [[package]]
 name = "nomenclature-adapter"
 version = "0.10.1"
-source = { git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=main#789be2c7fee7ce28a214a2102b3c117281694f46" }
+source = { git = "https://github.com/i2amparis/nomenclature-adapter.git?rev=main#224050e10c537f8d54a1c52333dcbe2e41972d37" }
 dependencies = [
     { name = "gitpython" },
     { name = "nomenclature-iamc" },
