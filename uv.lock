@@ -2045,7 +2045,7 @@ dev = [{ name = "ipython", specifier = ">=8.26.0" }]
 [[package]]
 name = "vetting-adapter"
 version = "0.1.0"
-source = { git = "https://github.com/i2amparis/vetting-adapter.git?rev=main#d3216b28848dc4a6658c7bab4065b11aa5092f19" }
+source = { git = "https://github.com/i2amparis/vetting-adapter.git?rev=main#81c1758ed34ad1fd79d2f973eb573cca4c86b332" }
 dependencies = [
     { name = "jinja2" },
     { name = "nomenclature-adapter" },
