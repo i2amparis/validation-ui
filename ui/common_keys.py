@@ -79,6 +79,14 @@ class SSKey(StrEnum):
     """
     AR6_CRITERIA_ALL_INCLUDED = 'ar6_criteria_all_included'
     """Whether all models/scenarios were assessed for all AR6 vetting checks."""
+    AR6_CRITERIA_ALL_INAPPLICABLE = 'ar6_criteria_all_inapplicable'
+    """Whether none of the 12 AR6 vetting criteria had any matching data for
+    any model/scenario in the uploaded dataset (as opposed to just some
+    criteria/model/scenario combinations being unassessed). Distinct from
+    `AR6_CRITERIA_ALL_INCLUDED` being False, since `.all()` on an empty
+    DataFrame is vacuously True and would otherwise misreport this case as
+    "all checks passed".
+    """
     AR6_EXCEL_DOWNLOAD_PATH = 'ar6_excel_download_path'
     """Path to the Excel file to be downloaded with AR6 vetting results. None
     if no download file has been prepared yet.
@@ -141,6 +149,7 @@ data_file_upload_clear_keys: tp.Final[tp.List[SSKey]] = [
     SSKey.AR6_CRITERIA_OUTPUT_DFS,
     SSKey.AR6_CRITERIA_ALL_PASSED,
     SSKey.AR6_CRITERIA_ALL_INCLUDED,
+    SSKey.AR6_CRITERIA_ALL_INAPPLICABLE,
     SSKey.AR6_EXCEL_DOWNLOAD_PATH,
     SSKey.GDP_POP_OUTPUT_DFS,
     SSKey.GDP_POP_ALL_PASSED,
