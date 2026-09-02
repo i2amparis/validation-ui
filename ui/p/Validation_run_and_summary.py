@@ -30,7 +30,13 @@ from page_ids import PageName
 
 def make_dsd_excel_file() -> bytes:
     """Create an Excel file with the current data structure definition."""
-    dsd: DataStructureDefinition = get_validation_dsd(force_load=True)
+    # `force_load` deliberately left False: this reuses the DSD already
+    # cached for the session (see `get_validation_dsd`) instead of forcing
+    # a fresh `git fetch` of every repository in the profile on every call.
+    # There's no need for the absolute latest commit here -- the DSD used
+    # for the download should just be consistent with whatever this session
+    # is already validating against.
+    dsd: DataStructureDefinition = get_validation_dsd()
     output_bytes: io.BytesIO = io.BytesIO()
     dsd.to_excel(output_bytes)
     output_bytes.seek(0)
@@ -85,9 +91,10 @@ def main():
         button_field = st.empty()
         if button_field.button('Run name checks'):
             button_field.empty()
+            # `force_load` deliberately left False here too -- see the
+            # comment in `make_dsd_excel_file` above.
             dsd: DataStructureDefinition = \
-                get_validation_dsd(force_load=True, allow_load=True,
-                                   show_spinner=True)
+                get_validation_dsd(allow_load=True, show_spinner=True)
             dsd_dims: list[str] = [str(_dim) for _dim in dsd.dimensions]
             non_region_dims: list[str] = [_dim for _dim in dsd_dims
                                            if _dim != 'region']
